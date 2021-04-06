@@ -65,7 +65,7 @@ python = 'python' #如果是 python3 运行命令请更改
         域名资产 - 集合 - 用于存放所有扫描得到的域名，自动去重
 """
 abs_path = os.path.dirname(os.path.abspath(__file__)) #绝对路径,请勿更改
-save_path = abs_path + '\\final_result'
+save_path = abs_path + '\\save'
 save_property_path = save_path + '\\property'
 
 tmp_path = abs_path + '\\tmp'
