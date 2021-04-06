@@ -1,3 +1,9 @@
+# 置顶
+
+该工具目前还没那么快写完，然后本人参与并维护了另一款与此类似的工具，欢迎你们疯狂Star!
+
+[花溪九尾](https://github.com/Cl0udG0d/HXnineTails/tree/test)
+
 # 介绍
 
 ### 工具介绍
@@ -8,7 +14,7 @@
 
 ### 目录介绍
 
-- final_result
+- save
 
   保存资产扫描信息，和漏洞利用信息
 
