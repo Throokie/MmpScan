@@ -20,7 +20,6 @@ print(banner)
 
 
 def init():
-    print("初始化中")
     try:
         if not os.path.exists(config.save_path):
             os.makedirs(config.save_path)
@@ -29,10 +28,9 @@ def init():
             os.makedirs(config.tmp_path)
             os.makedirs(config.tmp_property_path)
             os.makedirs(config.tmp_property_oneforall_path)
-        print("目录初始化完成")
 
     except Exception as e:
-        print("初始化失败: ", e)
+        print("目录初始化失败: ", e)
 
 
 '''

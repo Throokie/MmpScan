@@ -26,8 +26,12 @@ class OneForAll(object):
         try:
             os.system(self.command)
             print("[-]OneForall顺利结束了  ，目前保存文件中......")
+        except KeyboardInterrupt:
+            print("退出本次扫描")
+            pass
         except:
             print("[-]OneForall 故障！！！")
+            pass
 
 
     '''

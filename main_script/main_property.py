@@ -25,11 +25,11 @@ class Property(object):
     功能：将本次扫描资产得到的域名、ip单独保存成txt文本。方便下次扫描使用
     '''
     def save_txt(self, name):
-        with open(fr'{config.abs_path}\final_result\property\{name}_domain.txt', 'w') as f1:
+        with open(fr'{config.save_property_path}\{name}_domain.txt', 'w') as f1:
             for domain in config.domain_set:
                 f1.write(domain+'\n')
 
-        with open(fr'{config.abs_path}\final_result\property\{name}_ip.txt', 'w') as f2:
+        with open(fr'{config.save_property_path}\{name}_ip.txt', 'w') as f2:
             for domain in config.ip_set:
                 f2.write(domain+'\n')
 
