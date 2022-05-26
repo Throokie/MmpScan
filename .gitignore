@@ -2,13 +2,16 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+target.txt
 .idea
 # C extensions
 *.so
 /venv
 /save
-/tmp
+/Result
+/old_mmpscan
+/mmpscan_venv
+/Tmp
 debug.log
 # Distribution / packaging
 .Python
