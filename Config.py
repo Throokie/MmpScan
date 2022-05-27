@@ -17,7 +17,7 @@ python运行环境配置:
             原理:> (venv) pip install -r requirements.txt
 """
 # 如果要使用本机python环境，则请将python_venv_enable改为 False。不然我编写的调用脚本会执行 python_venv_xxx
-python_venv_enable = True
+python_venv_enable = False
 # 如果是本机python环境。 请更改成本机调用python的语句。或者本脚本venv的python路径  常用语句 py -3  |  python3  | python
 python_default = 'python'
 # 自动帮每个调用脚本安装venv环境，True为开启，False为关闭
@@ -26,9 +26,18 @@ python_venv_autoinstall_enable = False
 python_venv_pipinstall_enable = False
 # 默认的venv模块名称
 venv_name = 'Mmpscan_venv'
-# 为每个脚本设置一个Mmpscan内部名称  !!!开发修改！！！
-Mmpscan_scan_module_name = ['oneforall']
-Mmpscan_crack_module_name = ['xray','dirsearch']
+# 为每个脚本设置一个Mmpscan内部名称,可以影响到结果保存文件名 !!!开发修改！！！
+Mmpscan_scan_script_name = {
+    'oneforall':'oneforall',
+    'subfinder':'subfinder',
+    'subDomainsBrute':'subDomainsBrute',
+                            }
+Mmpscan_crack_script_name = {
+    'xray':'xray',
+    'dirsearch':'dirsearch',
+
+                            }
+
 
 
 """
@@ -40,51 +49,60 @@ Mmpscan_crack_module_name = ['xray','dirsearch']
 脚本路径, 顺序不要轻易修改
 """
 #被调用脚本路径!!!开发修改！！！
-abs_oneforall_path = fr"D:\长期桌面文件\MmpScan\Oneforall"
-abs_dirsearch_path = fr"D:\长期桌面文件\MmpScan\dirsearch"
-abs_xray_path = fr"C:\Users\花溪九尾\Xray_Rad_Fusion\xray.exe"
-
+abs_default_folder = fr'D:\长期桌面文件\Mmp'  #你的工具所在的统一文件夹
+abs_oneforall_path = fr"{abs_default_folder}\OneForAll"
+abs_dirsearch_path = fr"{abs_default_folder}\dirsearch"
+abs_xray_path = fr"{abs_default_folder}\Xray_Rad_Fusion\xray.exe"
+abs_subfinger_path = fr"{abs_default_folder}\subfinder.exe"
+abs_subDomainsBrute_path = fr"{abs_default_folder}\subDomainsBrute"
 #venv虚拟环境路径!!!需要则修改！！！
 python_venv_oneforall = fr'{abs_oneforall_path}\{venv_name}'
 python_venv_dirsearch = fr'{abs_dirsearch_path}\{venv_name}'
-venv_path = [python_venv_oneforall,python_venv_dirsearch]
+
+abs_path = os.path.dirname(os.path.abspath(__file__))# 绝对路径
+result_path = abs_path + '\\Result' # 保存全部结果的路径
+result_scan_path = result_path + '\\scan-info' # 保存scan结果的路径
+result_crack_path = result_path + '\\crack-info' # 保存crack结果的路径
+
+# 要创建的目录集合
+mkdir_path = [result_path, result_scan_path, result_crack_path]
 
 """
 venv命令配置：
     生成venv环境
     自动调用pip install
 """
+venv_path = [python_venv_oneforall,python_venv_dirsearch]
 cmd_pip_venv = [path + r'\Scripts\pip.exe install -r requirements.txt' for path in venv_path]
-__cmd_python_venv = [path + r'\Scripts\python.exe' for path in venv_path]
-cmd_python_venv = zip(__cmd_python_venv)
+cmd_python_path_sufiix = r'\Scripts\python.exe'  #python文件后缀
+
+
+
+
+
 
 '''以下配置可按照自己喜好运行。不用修改也能运行'''
+
+
+
+
 """
 线程： #还没开发到
         扫描
         爆破
 """
+# 同时进行的Scan扫描线程数
 scan_thread_count = 3
-# 资产收集进程数
+# 同时进行的Crack攻击线程数
 crack_thread_count = 3
-# 资产爆破进程数
+
 
 
 """
 保存文件路径：
         运行结果
 """
-# 绝对路径
-abs_path = os.path.dirname(os.path.abspath(__file__))
-# 保存全部结果的路径
-result_path = abs_path + '\\Result'
-# 保存scan结果的路径
-result_scan_path = result_path + '\\scan-info'
-# 保存crack结果的路径
-result_crack_path = result_path + '\\crack-info'
 
-# 要创建的目录集合
-mkdir_path = [result_path, result_scan_path, result_crack_path]
 
 
 """
@@ -128,6 +146,8 @@ proxies_ip = []
 ip_set = set()
 # scan得到的domain
 domain_set = set()
+# scan得到的C段ip
+cip_set = set()
 # 部分关键信息停留在窗口的秒数。方便看清，如果程序能够稳定运行，则建议为0。默认为1
 logger_INFO_show_time = 0
 logger_WARNNING_show_time = 0

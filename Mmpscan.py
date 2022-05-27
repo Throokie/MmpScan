@@ -28,7 +28,7 @@ banner ="""
     ②自动更换ip代理扫描
     ③web端（可能要很久）
  """
-print(banner)
+
 sleep(0.5)
 
 def init():
@@ -165,20 +165,33 @@ def Scan(target_list, target_queue, data_queue):
     data_dict = dict()
     for target in target_list:
         data_dict[target] = {
-            'sub_domain':[],
-            'ip':[],
+            'subdomain':set(),
+            'ip':set(),
+            'cip':set(),
         }
         try:
             #调用oneforall执行脚本
-            sub_domain, ip = Mmp_Script.OneForAll.start(target)
-            data_dict[target][sub_domain].append(sub_domain)
-            data_dict[target][sub_domain].append(ip)
-            #
-            sleep(3)
-            data_queue.put(data_dict)
+            sub_domain, ip, cip = Mmp_Script.OneForAll(target).start()
+            data_dict[target]['subdomain'].update(sub_domain)
+            data_dict[target]['ip'].update(ip)
+            data_dict[target]['cip'].update(cip)
+            #调用subfinder执行脚本
+            sub_domain, ip = Mmp_Script.SubFinder(target).start()
+            data_dict[target]['subdomain'].update(sub_domain)
+            data_dict[target]['ip'].update(ip)
+            #调用subDomainsBrute执行脚本
+            sub_domain, ip = Mmp_Script.SubDomainsBrute(target).start()
+            data_dict[target]['subdomain'].update(sub_domain)
+            data_dict[target]['ip'].update(ip)
+
             target_queue.put(target)
+            data_queue.put(data_dict)
         except Exception as e:
+            target_queue.put(target)
+            data_queue.put(data_dict)
+
             logger.info(f'Scan模块出现错误：{e}')
+
     #Scan发送扫描完毕信号，等到Crack取到该信号则退出
     target_queue.put('In the End')
     data_queue.put('error')
@@ -191,13 +204,17 @@ def Crack(target_queue,data_queue):
             if target == 'In the End':
                 return
             data_dict = data_queue.get()
-            print(data_dict)
+            print(len(data_dict[target]['subdomain']))
+            print(len(data_dict[target]['ip']))
+            print(list(data_dict[target]['ip']))
+            print(list(data_dict[target]['cip']))
             # Mmp_Script.OneForAll(target)'
         except Exception as e:
             logger.info(f'Crack模块出现错误：{e}')
 
 
 def main():
+    print(banner)
     usage = "用法:  %prog -f <filename> | -u <domain>"
     parser = OptionParser(usage=usage)  # 若输入错误，则输出提示usage
     parser.add_option("-u", "--target", type="string", dest="domain", help="python MmpScan -u baidu.com")
